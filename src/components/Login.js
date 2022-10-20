@@ -1,3 +1,6 @@
+import React from 'react'
+import { Link } from "react-router-dom"
+
 const Login = () => {
   return (
     <div className='flex justify-center items-center pt-8'>
@@ -95,9 +98,9 @@ const Login = () => {
         </div>
         <p className='px-6 text-sm text-center text-gray-400'>
           Don't have an account yet?{' '}
-          <a href='#' to='/register' className='hover:underline text-gray-600'>
+          <Link to='/register' className='hover:underline text-gray-600'>
             Sign up
-          </a>
+          </Link>
           .
         </p>
       </div>
