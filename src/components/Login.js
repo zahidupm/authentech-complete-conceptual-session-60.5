@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { AuthContext } from '../contexts/UserContext';
 
 const Login = () => {
+  const [userEmail, setUserEmail] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';
@@ -36,6 +37,15 @@ const Login = () => {
     .catch(error => console.error(error.message))
   }
 
+  // reset password 
+  const handleReset = () => {
+    resetPassword(userEmail)
+    .then(() => {
+      toast.success('Reset has been sent, Please check')
+    })
+    .catch(error => toast.error(error.message))
+  }
+
   return (
     <div className='flex justify-center items-center pt-8'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -57,6 +67,7 @@ const Login = () => {
                 Email address
               </label>
               <input
+              onBlur={(e) => setUserEmail(e.target.value)}
                 type='email'
                 name='email'
                 id='email'
@@ -91,7 +102,7 @@ const Login = () => {
           </div>
         </form>
         <div className='space-y-1'>
-          <button className='text-xs hover:underline text-gray-400'>
+          <button onClick={handleReset} className='text-xs hover:underline text-gray-400'>
             Forgot password?
           </button>
         </div>
