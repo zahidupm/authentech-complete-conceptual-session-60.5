@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import { AuthContext } from '../contexts/UserContext';
 
 const Login = () => {
+  const navigate = useNavigate();
   const {signIn, signInWithGoogle, resetPassword} = useContext(AuthContext);
 
   const handleSubmit = (e) => {
@@ -17,6 +18,7 @@ const Login = () => {
       const user = result.user;
       toast.success('Login Success!');
       console.log(user);
+      navigate('/profile');
     })
     .catch(error => console.error(error.message))
   }
