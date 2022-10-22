@@ -1,4 +1,4 @@
-import { createUserWithEmailAndPassword, getAuth, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendEmailVerification, signInWithPopup, updateProfile } from "firebase/auth";
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
@@ -7,7 +7,9 @@ import app from '../firebase/firebase.init';
 const auth = getAuth(app);
 
 const Register = () => {
-
+  const googleProvider = new GoogleAuthProvider();
+  
+// Sign up Email & password
   const handleSubmit = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -15,22 +17,43 @@ const Register = () => {
     const email = form.email.value;
     const password = form.password.value;
     
+    // create Account
     createUserWithEmailAndPassword(auth, email, password)
     .then(result => {
       const user = result.user;
       console.log(user);
       form.reset();
+      // update name
       updateProfile(auth.currentUser, {
         displayName: name,
       }).then(() => {
         toast.success('Name updated')
         console.log(auth.currentUser);
+
+        // Email Verification
+        sendEmailVerification(auth.currentUser)
+        .then(() => {
+          toast.success('Please check you email for verification link');
+        })
+        .catch(error => console.error(error))
+
+
       }).catch((error) => {
         toast.error(error.message)
       });
     })
     .catch(error => console.error(error))
   }
+
+// Google SignIn
+const handleGoogleSignIn = () => {
+  signInWithPopup(auth, googleProvider)
+  .then(result => {
+    const user = result.user;
+    console.log(user);
+  })
+  .catch(error => console.error(error))
+}
 
   return (
     <div className='flex justify-center items-center pt-8'>
@@ -106,7 +129,7 @@ const Register = () => {
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
         <div className='flex justify-center space-x-4'>
-          <button aria-label='Log in with Google' className='p-3 rounded-sm'>
+          <button onClick={handleGoogleSignIn} aria-label='Log in with Google' className='p-3 rounded-sm'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 32 32'
