@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { AuthContext } from "../contexts/UserContext";
 
 const Register = () => {
+  const navigate = useNavigate();
   const {createUser, updateName, verifyEmail, signInWithGoogle} = useContext(AuthContext);
   
 // Sign up Email & password
@@ -47,6 +48,7 @@ const Register = () => {
     .then(result => {
       const user = result.user;
       console.log(user);
+      navigate('/');
     })
     .catch(error => console.error(error))
   }
