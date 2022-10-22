@@ -1,5 +1,5 @@
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, sendEmailVerification, signInWithPopup, updateProfile } from 'firebase/auth';
-import React, { createContext, useState } from 'react';
+import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStateChanged, sendEmailVerification, signInWithPopup, signOut, updateProfile } from 'firebase/auth';
+import React, { createContext, useEffect, useState } from 'react';
 import app from '../firebase/firebase.init';
 
 const auth = getAuth(app);
@@ -31,13 +31,30 @@ const UserContext = ({children}) => {
         return signInWithPopup(auth, googleProvider);
     }
 
+    // 5. logout
+    const logOut = () => {
+        return signOut(auth);
+    }
+
     const authInfo = {
         user, 
         createUser,
         updateName,
         verifyEmail,
-        signInWithGoogle
+        signInWithGoogle,
+        logOut
     };
+
+    useEffect(() => {
+        // eta run hobe jokhon component  mount hobe
+        const unsubscribe = onAuthStateChanged(auth, currentUser => {
+            setUser(currentUser);
+        })
+        return () => {
+          // eta run hobe johkon component unmount hobe
+          unsubscribe();
+        }
+      },[])
 
     return (
         <AuthContext.Provider value={authInfo}>

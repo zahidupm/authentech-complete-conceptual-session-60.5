@@ -41,15 +41,15 @@ const Register = () => {
     .catch(error => console.error(error))
   }
 
-// Google SignIn
-const handleGoogleSignIn = () => {
-  signInWithGoogle()
-  .then(result => {
-    const user = result.user;
-    console.log(user);
-  })
-  .catch(error => console.error(error))
-}
+  // Google SignIn
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+    .then(result => {
+      const user = result.user;
+      console.log(user);
+    })
+    .catch(error => console.error(error))
+  }
 
   return (
     <div className='flex justify-center items-center pt-8'>
