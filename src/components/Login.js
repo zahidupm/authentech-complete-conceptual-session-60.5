@@ -1,7 +1,36 @@
-import React from 'react'
-import { Link } from "react-router-dom"
+import React, { useContext } from 'react';
+import { Link } from "react-router-dom";
+import { toast } from 'react-toastify';
+import { AuthContext } from '../contexts/UserContext';
 
 const Login = () => {
+  const {signIn, signInWithGoogle, resetPassword} = useContext(AuthContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const email = form.email.value;
+    const password = form.password.value;
+
+    signIn(email, password)
+    .then(result => {
+      const user = result.user;
+      toast.success('Login Success!');
+      console.log(user);
+    })
+    .catch(error => console.error(error.message))
+  }
+
+  // google signIn 2:41
+  const handleGoogleSignIn = () => {
+    signInWithGoogle()
+    .then( result => {
+      const user = result.user;
+      console.log(user);
+    })
+    .catch(error => console.error(error.message))
+  }
+
   return (
     <div className='flex justify-center items-center pt-8'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
@@ -11,7 +40,8 @@ const Login = () => {
             Sign in to access your account
           </p>
         </div>
-        <form
+        <form 
+          onSubmit={handleSubmit}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -68,7 +98,7 @@ const Login = () => {
           <div className='flex-1 h-px sm:w-16 dark:bg-gray-700'></div>
         </div>
         <div className='flex justify-center space-x-4'>
-          <button aria-label='Log in with Google' className='p-3 rounded-sm'>
+          <button onClick={handleGoogleSignIn} aria-label='Log in with Google' className='p-3 rounded-sm'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               viewBox='0 0 32 32'
